@@ -1,0 +1,148 @@
+use cdb =it will select the database
+
+create table tasks(
+id int auto_increment primary key,
+title varchar(255) not null,     
+start_date Date,
+due_date Date
+);
+
+create table checklist(
+id int auto_increment,
+task_id int,
+title varchar(255) not null,
+is_completed boolean not null Default False,
+primary key(id,task_id),
+foreign key(task_id)
+references tasks(id)
+on update restrict
+on delete cascade
+);
+
+desc tasks - it will show structure of the table
+
+create table susbscribers(
+email varchar(300) not null unique
+);
+
+alter  table susbscribers
+add id int auto_increment primary key;
+
+alter table susbscribers
+add phone int;
+
+alter table susbscribers
+drop column phone;
+
+alter table susbscribers
+rename column id to s_id;
+
+rename table susbscribers to sub;
+
+create table movies(
+movie_id int,
+movie_name varchar(45),
+movie_type varchar(45),
+movie_rating int,
+primary key(movie_id,movie_name)
+);
+
+create table company(
+company_id int unique,
+trade int not null,
+no_of_employees int not null Default 0
+);
+
+create table job_offer(
+offer_id int primary key,
+offer_title varchar(105) Default " ",
+offer_min_salary int Default 5000,
+offer_max_salry int Default null,
+company_id int,
+foreign key(company_id)
+references company(company_id)
+);
+
+rename table movies to movies_renamed;
+alter table movies_renamed
+add movie_director int;
+
+alter table movies_renamed
+add ID int first;
+
+alter table movies_renamed
+add movie_description varchar(500) after movie_name;
+
+alter table movies_renamed
+drop column movie_director;
+
+alter table movies_renamed
+add primary key(movie_id);
+
+alter table company
+add fk_candidate_id int
+foreign key(company_id)
+references(company_id);
+
+alter table movies_renamed
+ modify movie_rating varchar(20);
+ 
+ -------------------------------------------------------------------
+ create table tasks(
+ task_id int auto_increment primary key,
+ title varchar(255) not null,
+ start_date Date,
+ due_date Date,
+ priority tinyint not null default 3,
+ description text
+ );
+ 
+ insert into tasks(title,priority) values
+ ('learn mysql statement',1);
+ 
+ insert into tasks values(2,'insert statement without column','2024-06-01','2024-06-02',2,'the sequence should be maintained whenever we are using the insert \n without specifying the column names');
+ 
+ --------------------------------------------------------------------+
+| task_id | title                           | start_date | due_date   | priority | description                                                                                              |
++---------+---------------------------------+------------+------------+----------+----------------------------------------------------------------------------------------------------------+
+|       1 | learn mysql statement           | NULL       | NULL       |        1 | NULL                                                                                                     |
+|       2 | insert statement without column | 2024-06-01 | 2024-06-02 |        2 | the sequence should be maintained whenever we are using the insert
+ without specifying the column names |
++---------+---------------------------------+------------+------------+----------+----------------------------------------------------------------------------------------------------------+
+
+insert into tasks(title,start_date,due_date) values ('insert with default value of priority','2024-06-24,'2024-06-05');
+
+insert into tasks(title,start_date,due_date) values ('inseert using current date in tasks',current_date(),current_date() +1);
+
+
++---------+-------------------------------------+------------+------------+----------+----------------------------------------------------------------------------------------------------------+
+| task_id | title                               | start_date | due_date   | priority | description                                                                                              |
++---------+-------------------------------------+------------+------------+----------+----------------------------------------------------------------------------------------------------------+
+|       1 | learn mysql statement               | NULL       | NULL       |        1 | NULL                                                                                                     |
+|       2 | insert statement without column     | 2024-06-01 | 2024-06-02 |        2 | the sequence should be maintained whenever we are using the insert
+ without specifying the column names |
+|       3 | inseert using current date in tasks | 2024-06-24 | 2024-06-25 |        3 | NULL                                                                                                     |
++---------+-------------------------------------+------------+------------+----------+----------------------------------------------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+
+
+insert into tasks (title,priority) values
+('do prestudy',1),
+('do requirement gathering',1),
+('prepare srs',2),
+('signoff requirements',3);
+
++---------+-------------------------------------+------------+------------+----------+----------------------------------------------------------------------------------------------------------+
+| task_id | title                               | start_date | due_date   | priority | description                                                                                              |
++---------+-------------------------------------+------------+------------+----------+----------------------------------------------------------------------------------------------------------+
+|       1 | learn mysql statement               | NULL       | NULL       |        1 | NULL                                                                                                     |
+|       2 | insert statement without column     | 2024-06-01 | 2024-06-02 |        2 | the sequence should be maintained whenever we are using the insert
+ without specifying the column names |
+|       3 | inseert using current date in tasks | 2024-06-24 | 2024-06-25 |        3 | NULL                                                                                                     |
+|       4 | do prestudy                         | NULL       | NULL       |        1 | NULL                                                                                                     |
+|       5 | do requirement gathering            | NULL       | NULL       |        1 | NULL                                                                                                     |
+|       6 | prepare srs                         | NULL       | NULL       |        2 | NULL                                                                                                     |
+|       7 | signoff requirements                | NULL       | NULL       |        3 | NULL                                                                                                     |
++---------+-------------------------------------+------------+------------+----------+----------------------------------------------------------------------------------------------------------+
+7 rows in set (0.00 sec)
+

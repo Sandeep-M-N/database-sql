@@ -146,3 +146,604 @@ insert into tasks (title,priority) values
 +---------+-------------------------------------+------------+------------+----------+----------------------------------------------------------------------------------------------------------+
 7 rows in set (0.00 sec)
 
+------------------------------------------------------------------------------------------------------------------------------
+25/6/24
+
+-find the structure of the table employees
+desc employees;
+
+-display all columns and all rows data for the table employees
+select * from employees;
+
+-display only firstname & lastname from employees
+select firstname,lastname from employees;
+
+-display fullmame of the employee with alias fullname
+ select concat(firstname," ",lastname) as Fullname from employees;
+
+-display current date and time
+select now() "datetime";
+
+-display current date only
+select current_date() date;
+
+-display current logged in user
+select current_user();
+
+-display offices in the ascending order of cities
+select officeCode,city,phone from offices order by city asc;
+
+-display offices int the descending order of country and ascending order of city
+select city,country,phone,officeCode from offices order by country desc,city asc;
+
+-display 10 records from orderdetails
+select orderNumber,quantityOrdered,priceEach from orderdetails limit 10;
+
+select orderNumber,quantityOrdered,priceEach,priceEach*quantityOrdered "totalPrice" from orderdetails limit 10;
++-------------+-----------------+-----------+------------+
+| orderNumber | quantityOrdered | priceEach | totalPrice |
++-------------+-----------------+-----------+------------+
+|       10100 |              30 |    136.00 |    4080.00 |
+|       10100 |              50 |     55.09 |    2754.50 |
+|       10100 |              22 |     75.46 |    1660.12 |
+|       10100 |              49 |     35.29 |    1729.21 |
+|       10101 |              25 |    108.06 |    2701.50 |
+|       10101 |              26 |    167.06 |    4343.56 |
+|       10101 |              45 |     32.53 |    1463.85 |
+|       10101 |              46 |     44.35 |    2040.10 |
+|       10102 |              39 |     95.55 |    3726.45 |
+|       10102 |              41 |     43.13 |    1768.33 |
++-------------+-----------------+-----------+------------+
+
+select orderNumber,quantityOrdered,priceEach,priceEach*quantityOrdered "totalPrice" from orderdetails order by priceEach*quantityOrdered limit 10;
++-------------+-----------------+-----------+------------+
+| orderNumber | quantityOrdered | priceEach | totalPrice |
++-------------+-----------------+-----------+------------+
+|       10419 |              15 |     32.10 |     481.50 |
+|       10420 |              15 |     35.29 |     529.35 |
+|       10322 |              20 |     26.55 |     531.00 |
+|       10407 |               6 |     91.11 |     546.66 |
+|       10425 |              11 |     50.32 |     553.52 |
+|       10344 |              20 |     27.88 |     557.60 |
+|       10110 |              20 |     28.88 |     577.60 |
+|       10280 |              20 |     29.87 |     597.40 |
+|       10408 |              15 |     41.03 |     615.45 |
+|       10409 |               6 |    104.25 |     625.50 |
++-------------+-----------------+-----------+------------+
+10 rows in set (0.00 sec)
+
+-display distinct status from orders table;
+select distinct status from orders;
++------------+
+| status     |
++------------+
+| Shipped    |
+| Resolved   |
+| Cancelled  |
+| On Hold    |
+| Disputed   |
+| In Process |
++------------+
+
+select ordernumber,status from orders order by field(
+status,
+'In process','On Hold','Cancelled','Resolved','Disputed','Shipped') limit 20;
+
++-------------+------------+
+| ordernumber | status     |
++-------------+------------+
+|       10422 | In Process |
+|       10420 | In Process |
+|       10424 | In Process |
+|       10425 | In Process |
+|       10423 | In Process |
+|       10421 | In Process |
+|       10401 | On Hold    |
+|       10407 | On Hold    |
+|       10414 | On Hold    |
+|       10334 | On Hold    |
+|       10253 | Cancelled  |
+|       10260 | Cancelled  |
+|       10248 | Cancelled  |
+|       10262 | Cancelled  |
+|       10179 | Cancelled  |
+|       10167 | Cancelled  |
+|       10327 | Resolved   |
+|       10386 | Resolved   |
+|       10367 | Resolved   |
+|       10164 | Resolved   |
++-------------+------------+
+
+
+-filtering can be achieved in rdbms using where clause
+
+select * from orders where status = 'In Process';
++-------------+------------+--------------+-------------+------------+-----------------------------------------------------+----------------+
+| orderNumber | orderDate  | requiredDate | shippedDate | status     | comments                                            | customerNumber |
++-------------+------------+--------------+-------------+------------+-----------------------------------------------------+----------------+
+|       10420 | 2005-05-29 | 2005-06-07   | NULL        | In Process | NULL                                                |            282 |
+|       10421 | 2005-05-29 | 2005-06-06   | NULL        | In Process | Custom shipping instructions were sent to warehouse |            124 |
+|       10422 | 2005-05-30 | 2005-06-11   | NULL        | In Process | NULL                                                |            157 |
+|       10423 | 2005-05-30 | 2005-06-05   | NULL        | In Process | NULL                                                |            314 |
+|       10424 | 2005-05-31 | 2005-06-08   | NULL        | In Process | NULL                                                |            141 |
+|       10425 | 2005-05-31 | 2005-06-07   | NULL        | In Process | NULL                                                |            119 |
++-------------+------------+--------------+-------------+------------+-----------------------------------------------------+----------------+
+
+select orderNumber,orderDate,status from orders where status = 'In Process' order by orderDate;
++-------------+------------+------------+
+| orderNumber | orderDate  | status     |
++-------------+------------+------------+
+|       10420 | 2005-05-29 | In Process |
+|       10421 | 2005-05-29 | In Process |
+|       10422 | 2005-05-30 | In Process |
+|       10423 | 2005-05-30 | In Process |
+|       10424 | 2005-05-31 | In Process |
+|       10425 | 2005-05-31 | In Process |
++-------------+------------+------------+
+
+-display all the employees who has job title  sales rep 
+select firstname,lastname,jobtitle from employees where jobtitle = 'Sales Rep';
++-----------+-----------+-----------+
+| firstname | lastname  | jobtitle  |
++-----------+-----------+-----------+
+| Leslie    | Jennings  | Sales Rep |
+| Leslie    | Thompson  | Sales Rep |
+| Julie     | Firrelli  | Sales Rep |
+| Steve     | Patterson | Sales Rep |
+| Foon Yue  | Tseng     | Sales Rep |
+| George    | Vanauf    | Sales Rep |
+| Loui      | Bondur    | Sales Rep |
+| Gerard    | Hernandez | Sales Rep |
+| Pamela    | Castillo  | Sales Rep |
+| Larry     | Bott      | Sales Rep |
+| Barry     | Jones     | Sales Rep |
+| Andy      | Fixter    | Sales Rep |
+| Peter     | Marsh     | Sales Rep |
+| Tom       | King      | Sales Rep |
+| Mami      | Nishi     | Sales Rep |
+| Yoshimi   | Kato      | Sales Rep |
+| Martin    | Gerard    | Sales Rep |
++-----------+-----------+-----------+
+
+-display all employees which have a job title as president or vp sales
+select firstname,lastname,jobtitle from employees where jobtitle in ('President','VP sales');
++-----------+-----------+-----------+
+| firstname | lastname  | jobtitle  |
++-----------+-----------+-----------+
+| Diane     | Murphy    | President |
+| Mary      | Patterson | VP Sales  |
++-----------+-----------+-----------+
+
+ select firstname,lastname,jobtitle,reportsto from employees where jobtitle in ('President','VP sales','Sales Rep') and (reportsto !=1143 or reportsto is null);
++-----------+-----------+-----------+-----------+
+| firstname | lastname  | jobtitle  | reportsto |
++-----------+-----------+-----------+-----------+
+| Diane     | Murphy    | President |      NULL |
+| Mary      | Patterson | VP Sales  |      1002 |
+| Loui      | Bondur    | Sales Rep |      1102 |
+| Gerard    | Hernandez | Sales Rep |      1102 |
+| Pamela    | Castillo  | Sales Rep |      1102 |
+| Larry     | Bott      | Sales Rep |      1102 |
+| Barry     | Jones     | Sales Rep |      1102 |
+| Andy      | Fixter    | Sales Rep |      1088 |
+| Peter     | Marsh     | Sales Rep |      1088 |
+| Tom       | King      | Sales Rep |      1088 |
+| Mami      | Nishi     | Sales Rep |      1056 |
+| Yoshimi   | Kato      | Sales Rep |      1621 |
+| Martin    | Gerard    | Sales Rep |      1102 |
++-----------+-----------+-----------+-----------+
+
+-sorting
+Order By, asc,dsc,fields
+limit
+where:
+comparison operators = ,<,>,<=,>=,!=
+logical operators: and,or,not
+other operators:in,not in ,is null ,is not null
+
+
+-display all the products whose productname starts with america
+select productname from products where productname like 'America%';
++--------------------------------+
+| productname                    |
++--------------------------------+
+| American Airlines: B767-300    |
+| America West Airlines B757-200 |
+| American Airlines: MD-11S      |
++--------------------------------+
+
+select firstname,lastname from employees where firstname like 'J%';
++-----------+----------+
+| firstname | lastname |
++-----------+----------+
+| Jeff      | Firrelli |
+| Julie     | Firrelli |
++-----------+----------+
+
+ select firstname,lastname from employees where firstname like 'M%';
++-----------+-----------+
+| firstname | lastname  |
++-----------+-----------+
+| Mary      | Patterson |
+| Mami      | Nishi     |
+| Martin    | Gerard    |
++-----------+-----------+
+
+ select firstname,lastname from employees where firstname like 'M%N';
++-----------+----------+
+| firstname | lastname |
++-----------+----------+
+| Martin    | Gerard   |
++-----------+----------+
+
+select firstname,lastname from employees where firstname like '%i';
++-----------+----------+
+| firstname | lastname |
++-----------+----------+
+| Loui      | Bondur   |
+| Mami      | Nishi    |
+| Yoshimi   | Kato     |
++-----------+----------+
+
+ select firstname,lastname from employees where firstname like '___r%';
++-----------+----------+
+| firstname | lastname |
++-----------+----------+
+| George    | Vanauf   |
+| Larry     | Bott     |
+| Barry     | Jones    |
++-----------+----------+
+
+ select firstname,lastname from employees where firstname like '__r_r%';
++-----------+-----------+
+| firstname | lastname  |
++-----------+-----------+
+| Gerard    | Bondur    |
+| Gerard    | Hernandez |
++-----------+-----------+
+
+
+select productname,productcode from products where productcode like '%__20';
++---------------------------+-------------+
+| productname               | productcode |
++---------------------------+-------------+
+| 1917 Maxwell Touring Car  | S18_3320    |
+| 1937 Horch 930V Limousine | S24_3420    |
+| 1961 Chevrolet Impala     | S24_4620    |
++---------------------------+-------------+
+
+ select productname,productcode from products where productcode like '%\_20%';
++-------------------------------------------+-------------+
+| productname                               | productcode |
++-------------------------------------------+-------------+
+| 1996 Moto Guzzi 1100i                     | S10_2016    |
+| 1960 BSA Gold Star DBD34                  | S24_2000    |
+| 18th century schooner                     | S24_2011    |
+| 1938 Cadillac V-16 Presidential Limousine | S24_2022    |
+| HMS Bounty                                | S700_2047   |
++-------------------------------------------+-------------+
+
+-between 
+
+select ordernumber,orderdate from orders where orderdate between '2003-01-01' and '2003-03-03';
+
++-------------+------------+
+| ordernumber | orderdate  |
++-------------+------------+
+|       10100 | 2003-01-06 |
+|       10101 | 2003-01-09 |
+|       10102 | 2003-01-10 |
+|       10103 | 2003-01-29 |
+|       10104 | 2003-01-31 |
+|       10105 | 2003-02-11 |
+|       10106 | 2003-02-17 |
+|       10107 | 2003-02-24 |
+|       10108 | 2003-03-03 |
++-------------+------------+
+
+select productcode,productname,buyprice from poducts where buyprice between 90 and 100;
+
++-------------+--------------------------------------+----------+
+| productcode | productname                          | buyprice |
++-------------+--------------------------------------+----------+
+| S10_1949    | 1952 Alpine Renault 1300             |    98.58 |
+| S10_4698    | 2003 Harley-Davidson Eagle Drag Bike |    91.02 |
+| S12_1099    | 1968 Ford Mustang                    |    95.34 |
+| S12_1108    | 2001 Ferrari Enzo                    |    95.59 |
+| S18_1984    | 1995 Honda Civic                     |    93.89 |
+| S18_4027    | 1970 Triumph Spitfire                |    91.92 |
+| S24_3856    | 1956 Porsche 356A Coupe              |    98.30 |
++-------------+--------------------------------------+----------+
+
+select productcode,productname,buyprice from poducts where buyprice not between 90 and 100;
+
+select ordernumber,requireddate,status from orders where status in ('Shipped','In Process') and requireddate between '2003-01-01' and '2003-03-03';
++-------------+--------------+---------+
+| ordernumber | requireddate | status  |
++-------------+--------------+---------+
+|       10100 | 2003-01-13   | Shipped |
+|       10101 | 2003-01-18   | Shipped |
+|       10102 | 2003-01-18   | Shipped |
+|       10103 | 2003-02-07   | Shipped |
+|       10104 | 2003-02-09   | Shipped |
+|       10105 | 2003-02-21   | Shipped |
+|       10106 | 2003-02-24   | Shipped |
+|       10107 | 2003-03-03   | Shipped |
++-------------+--------------+---------+
+
+select customername,creditlimit from customers  order by creditlimit desc limit 5;
++------------------------------+-------------+
+| customername                 | creditlimit |
++------------------------------+-------------+
+| Euro+ Shopping Channel       |   227600.00 |
+| Mini Gifts Distributors Ltd. |   210500.00 |
+| Vida Sport, Ltd              |   141300.00 |
+| Muscle Machine Inc           |   138500.00 |
+| AV Stores, Co.               |   136800.00 |
++------------------------------+-------------+
+
+select customername,city fom customers order by city desc limit 6,10;
++--------------------------------+----------------+
+| customername                   | city           |
++--------------------------------+----------------+
+| Alpha Cognac                   | Toulouse       |
+| Amica Models & Co.             | Torino         |
+| Stuttgart Collectable Exchange | Stuttgart      |
+| Mini Caravy                    | Strasbourg     |
+| Baane Mini Imports             | Stavern        |
+| Australian Gift Network, Co    | South Brisbane |
+| Asian Shopping Network, Co     | Singapore      |
+| Dragon Souveniers, Ltd.        | Singapore      |
+| Handji Gifts& Co               | Singapore      |
+| Iberia Gift Imports, Corp.     | Sevilla        |
++--------------------------------+----------------+
+
+ select customername,city from customers order by city desc limit 1,1;
++-------------------------------+------------+
+| customername                  | city       |
++-------------------------------+------------+
+| Extreme Desk Decorations, Ltd | Wellington |
++-------------------------------+------------+
+
+-Aggregation (Grouping)
+ select count(*) from products;
++----------+
+| count(*) |
++----------+
+|      110 |
++----------+
+1 row in set (0.09 sec)
+
+mysql> select max(quantityordered) from orderdetails;
++----------------------+
+| max(quantityordered) |
++----------------------+
+|                   97 |
++----------------------+
+1 row in set (0.02 sec)
+
+select productcode,max(quantityordered) as Mquantity,
+min(quantityordered) as Minquantity,
+avg(quantityordered) as Aquantity,
+count(productcode) total_count
+from orderdetails group by productcode,priceeach limit 20;
++-------------+-----------+-------------+-----------+-------------+
+| productcode | Mquantity | Minquantity | Aquantity | total_count |
++-------------+-----------+-------------+-----------+-------------+
+| S18_1749    |        30 |          26 |   28.0000 |           2 |
+| S18_2248    |        50 |          26 |   37.3333 |           3 |
+| S18_4409    |        36 |          22 |   29.0000 |           2 |
+| S24_3969    |        49 |          15 |   36.2500 |           4 |
+| S18_2325    |        25 |          25 |   25.0000 |           1 |
+| S18_2795    |        50 |          23 |   33.5000 |           4 |
+| S24_1937    |        45 |          45 |   45.0000 |           1 |
+| S24_2022    |        46 |          46 |   46.0000 |           1 |
+| S18_1342    |        39 |          37 |   38.0000 |           2 |
+| S18_1367    |        41 |          41 |   41.0000 |           1 |
+| S10_1949    |        48 |          26 |   34.3333 |           3 |
+| S10_4962    |        42 |          33 |   37.5000 |           2 |
+| S12_1666    |        49 |          21 |   35.8000 |           5 |
+| S18_1097    |        43 |          35 |   39.0000 |           2 |
+| S18_2432    |        39 |          22 |   32.0000 |           3 |
+| S18_2949    |        50 |          27 |   38.5000 |           2 |
+| S18_2957    |        46 |          35 |   40.5000 |           2 |
+| S18_3136    |        31 |          25 |   28.0000 |           2 |
+| S18_3320    |        46 |          33 |   39.5000 |           2 |
+| S18_4600    |        36 |          36 |   36.0000 |           1 |
++-------------+-----------+-------------+-----------+-------------+
+
+---------------------------------------------------------------------------------------------------
+Assignment
+  Get department,total salary with respect to a department from employee table.
++---------------+-------------+
+| department_id | sum(salary) |
++---------------+-------------+
+|            20 |       41000 |
+|            30 |       30800 |
+|            40 |       16900 |
+|            50 |       34100 |
+|            60 |       22400 |
+|            70 |        2900 |
+|            80 |        8900 |
+|            90 |        2400 |
+|           100 |       12000 |
+|           110 |        2800 |
+|           130 |        2500 |
+|           140 |        6900 |
+|           150 |        7800 |
+|           160 |        7700 |
+|           170 |       17200 |
++---------------+-------------+
+2. Get department,total salary with respect to a department from employee table order by total salary descending
++---------------+-------------+
+| department_id | totalsalary |
++---------------+-------------+
+|            20 |       41000 |
+|            50 |       34100 |
+|            30 |       30800 |
+|            60 |       22400 |
+|           170 |       17200 |
+|            40 |       16900 |
+|           100 |       12000 |
+|            80 |        8900 |
+|           150 |        7800 |
+|           160 |        7700 |
+|           140 |        6900 |
+|            70 |        2900 |
+|           110 |        2800 |
+|           130 |        2500 |
+|            90 |        2400 |
++---------------+-------------+
+3. Get department wise maximum salary from employee table order by salary ascending
+ select department_id,max(salary) as 'MaxSal'  from employee group by department_id order by MaxSal asc;
++---------------+--------+
+| department_id | MaxSal |
++---------------+--------+
+|            90 |   2400 |
+|           130 |   2500 |
+|           110 |   2800 |
+|            70 |   2900 |
+|            80 |   5800 |
+|           140 |   6900 |
+|           160 |   7700 |
+|           150 |   7800 |
+|            40 |   7900 |
+|            50 |   8200 |
+|            60 |   9000 |
+|           170 |   9000 |
+|           100 |  12000 |
+|            30 |  17000 |
+|            20 |  24000 |
++---------------+--------+
+4. Get department wise minimum salary from employee table order by salary ascending
+select department_id,min(salary) as 'MinSal'  from employee group by department_id order by MinSal asc;
++---------------+--------+
+| department_id | MinSal |
++---------------+--------+
+|            50 |   2200 |
+|            90 |   2400 |
+|           130 |   2500 |
+|            60 |   2600 |
+|            30 |   2800 |
+|           110 |   2800 |
+|            70 |   2900 |
+|            80 |   3100 |
+|            40 |   4200 |
+|           140 |   6900 |
+|           160 |   7700 |
+|           150 |   7800 |
+|           170 |   8200 |
+|           100 |  12000 |
+|            20 |  17000 |
++---------------+--------+
+5. Select department,total salary with respect to a department from employee table where total salary greater
+-- than 800000 order by Total_Salary descending
+ select department_id,sum(salary) from employee where salary > 800000 group by department_id order by sum(salary);
+Empty set (0.00 sec)
+6. Select employees first name, last name, job_id and salary whose first name starts with alphabet S
+ select first_name,last_name,job_id,salary from employee where first_name like 'S%';
++------------+-----------+----------+--------+
+| first_name | last_name | job_id   | salary |
++------------+-----------+----------+--------+
+| Steven     | King      | AD_PRES  |  24000 |
+| Shelli     | Baida     | PU_CLERK |   2900 |
+| Sigal      | Tobias    | PU_CLERK |   2800 |
+| Shanta     | Vollman   | ST_MAN   |   6500 |
+| Steven     | Markle    | ST_CLERK |   2200 |
++------------+-----------+----------+--------+
+7. Write a query to select employee with the highest salary
+  select * from employee order by salary desc limit 1;
++-------------+------------+-----------+-------+--------------+------------+---------+--------+----------------+------------+---------------+
+| employee_id | first_name | last_name | email | phone_number | hire_date  | job_id  | salary | commission_pct | manager_id | department_id |
++-------------+------------+-----------+-------+--------------+------------+---------+--------+----------------+------------+---------------+
+|         100 | Steven     | King      | SKING | 515.123.4567 | 1987-06-17 | AD_PRES |  24000 |           NULL |       NULL |            20 |
++-------------+------------+-----------+-------+--------------+------------+---------+--------+----------------+------------+---------------+
+8. Select employee with the second highest salary
+ select * from employee order by salary desc limit 1,1;
++-------------+------------+-----------+----------+--------------+------------+--------+--------+----------------+------------+---------------+
+| employee_id | first_name | last_name | email    | phone_number | hire_date  | job_id | salary | commission_pct | manager_id | department_id |
++-------------+------------+-----------+----------+--------------+------------+--------+--------+----------------+------------+---------------+
+|         101 | Neena      | Kochhar   | NKOCHHAR | 515.123.4568 | 1989-11-21 | AD_VP  |  17000 |           NULL |        100 |            20 |
++-------------+------------+-----------+----------+--------------+------------+--------+--------+----------------+------------+---------------+
+1 row in set (0.00 sec)
+9. Get the count of employees hired year wise
+select year(hire_date),count(*) from employee group by year(hire_date);
++-----------------+----------+
+| year(hire_date) | count(*) |
++-----------------+----------+
+|            1987 |        1 |
+|            1989 |        1 |
+|            1993 |        1 |
+|            1990 |        1 |
+|            1991 |        1 |
+|            1997 |       10 |
+|            1998 |        4 |
+|            1999 |        5 |
+|            1994 |        3 |
+|            1995 |        2 |
+|            1996 |        1 |
+|            2000 |        1 |
++-----------------+----------+
+10. Select the employees whose first_name contains “an”
+ select first_name from employee where first_name like '%an%';
++-------------+
+| first_name  |
++-------------+
+| Alexander   |
+| Diana       |
+| Nancy       |
+| Daniel      |
+| Jose Manuel |
+| Alexander   |
+| Shanta      |
++-------------+
+11. Find the employees who joined in August, 1994.
+select * from employee where month(hire_date) =08;
++-------------+------------+-----------+----------+--------------+------------+------------+--------+----------------+------------+---------------+
+| employee_id | first_name | last_name | email    | phone_number | hire_date  | job_id     | salary | commission_pct | manager_id | department_id |
++-------------+------------+-----------+----------+--------------+------------+------------+--------+----------------+------------+---------------+
+|         108 | Nancy      | Greenberg | NGREENBE | 515.124.4569 | 1994-08-17 | FI_MGR     |  12000 |           NULL |        101 |           100 |
+|         109 | Daniel     | Faviet    | DFAVIET  | 515.124.4169 | 1994-08-12 | FI_ACCOUNT |   9000 |           NULL |        108 |           170 |
+|         121 | Adam       | Fripp     | AFRIPP   | 650.123.2234 | 1997-08-09 | ST_MAN     |   8200 |           NULL |        100 |            50 |
++-------------+------------+-----------+----------+--------------+------------+------------+--------+----------------+------------+---------------+
+12. Write a SQL query to display the 5 least earning employees
+ select * from employee order by salary asc limit 5;
++-------------+------------+-------------+----------+--------------+------------+----------+--------+----------------+------------+---------------+
+| employee_id | first_name | last_name   | email    | phone_number | hire_date  | job_id   | salary | commission_pct | manager_id | department_id |
++-------------+------------+-------------+----------+--------------+------------+----------+--------+----------------+------------+---------------+
+|         128 | Steven     | Markle      | SMARKLE  | 650.124.1434 | 2000-03-04 | ST_CLERK |   2200 |           NULL |        120 |            50 |
+|         127 | James      | Landry      | JLANDRY  | 650.124.1334 | 1999-01-02 | ST_CLERK |   2400 |           NULL |        120 |            90 |
+|         119 | Karen      | Colmenares  | KCOLMENA | 515.127.4566 | 1999-04-08 | PU_CLERK |   2500 |           NULL |        114 |           130 |
+|         118 | Guy        | Himuro      | GHIMURO  | 515.127.4565 | 1998-01-02 | PU_CLERK |   2600 |           NULL |        114 |            60 |
+|         126 | Irene      | Mikkilineni | IMIKKILI | 650.124.1224 | 1998-11-12 | ST_CLERK |   2700 |           NULL |        120 |            50 |
++-------------+------------+-------------+----------+--------------+------------+----------+--------+----------------+------------+---------------+
+13. Find the employees hired in the 80sselect * from employee where year(hire_date) between 1980 and 1990;
++-------------+------------+-----------+----------+--------------+------------+---------+--------+----------------+------------+---------------+
+| employee_id | first_name | last_name | email    | phone_number | hire_date  | job_id  | salary | commission_pct | manager_id | department_id |
++-------------+------------+-----------+----------+--------------+------------+---------+--------+----------------+------------+---------------+
+|         100 | Steven     | King      | SKING    | 515.123.4567 | 1987-06-17 | AD_PRES |  24000 |           NULL |       NULL |            20 |
+|         101 | Neena      | Kochhar   | NKOCHHAR | 515.123.4568 | 1989-11-21 | AD_VP   |  17000 |           NULL |        100 |            20 |
+|         103 | Alexander  | Hunold    | AHUNOLD  | 590.423.4567 | 1990-09-30 | IT_PROG |   9000 |           NULL |        102 |            60 |
++-------------+------------+-----------+----------+--------------+------------+---------+--------+----------------+------------+---------------+
+3 rows in set (0.00 sec)
+14. Find the employees who joined the company after 15th of the month
+ select * from employee where day(hire_date) >=15;
++-------------+------------+-----------+----------+--------------+------------+---------+--------+----------------+------------+---------------+
+| employee_id | first_name | last_name | email    | phone_number | hire_date  | job_id  | salary | commission_pct | manager_id | department_id |
++-------------+------------+-----------+----------+--------------+------------+---------+--------+----------------+------------+---------------+
+|         100 | Steven     | King      | SKING    | 515.123.4567 | 1987-06-17 | AD_PRES |  24000 |           NULL |       NULL |            20 |
+|         101 | Neena      | Kochhar   | NKOCHHAR | 515.123.4568 | 1989-11-21 | AD_VP   |  17000 |           NULL |        100 |            20 |
+|         103 | Alexander  | Hunold    | AHUNOLD  | 590.423.4567 | 1990-09-30 | IT_PROG |   9000 |           NULL |        102 |            60 |
+|         104 | Bruce      | Ernst     | BERNST   | 590.423.4568 | 1991-05-21 | IT_PROG |   6000 |           NULL |        103 |            60 |
+|         105 | David      | Austin    | DAUSTIN  | 590.423.4569 | 1997-06-25 | IT_PROG |   4800 |           NULL |        103 |            60 |
+|         108 | Nancy      | Greenberg | NGREENBE | 515.124.4569 | 1994-08-17 | FI_MGR  |  12000 |           NULL |        101 |           100 |
+|         120 | Matthew    | Weiss     | MWEISS   | 650.123.1234 | 1996-07-18 | ST_MAN  |   8000 |           NULL |        100 |            50 |
++-------------+------------+-----------+----------+--------------+------------+---------+--------+----------------+------------+---------------+
+15. find the count of employees who not received the commission
+16. Calculate the total salary inclusive of commission for all the employees
+
+
+
+
+
+

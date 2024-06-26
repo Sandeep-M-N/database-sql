@@ -741,9 +741,827 @@ select * from employee where month(hire_date) =08;
 +-------------+------------+-----------+----------+--------------+------------+---------+--------+----------------+------------+---------------+
 15. find the count of employees who not received the commission
 16. Calculate the total salary inclusive of commission for all the employees
+----------------------------------------------------------------------------------------------------------------------
+26/6/24
+
+joins
+
+select productcode , productname,textDescription
+from products p
+inner join productlines pl
+on p.productline = pl.productline;
+
+
+ select employee_id,first_name,last_name,department_name from departments d
+    -> inner join employee e
+    -> on d.department_id = e.department_id;
++-------------+-------------+-------------+----------------------+
+| employee_id | first_name  | last_name   | department_name      |
++-------------+-------------+-------------+----------------------+
+|         100 | Steven      | King        | Marketing            |
+|         101 | Neena       | Kochhar     | Marketing            |
+|         102 | Lex         | De Haan     | Purchasing           |
+|         114 | Den         | Raphaely    | Purchasing           |
+|         117 | Sigal       | Tobias      | Purchasing           |
+|         106 | Valli       | Pataballa   | Human Resources      |
+|         107 | Diana       | Lorentz     | Human Resources      |
+|         122 | Payam       | Kaufling    | Human Resources      |
+|         120 | Matthew     | Weiss       | Shipping             |
+|         121 | Adam        | Fripp       | Shipping             |
+|         123 | Shanta      | Vollman     | Shipping             |
+|         125 | Julia       | Nayer       | Shipping             |
+|         126 | Irene       | Mikkilineni | Shipping             |
+|         128 | Steven      | Markle      | Shipping             |
+|         129 | Laura       | Bissot      | Shipping             |
+|         103 | Alexander   | Hunold      | IT                   |
+|         104 | Bruce       | Ernst       | IT                   |
+|         105 | David       | Austin      | IT                   |
+|         118 | Guy         | Himuro      | IT                   |
+|         116 | Shelli      | Baida       | Public Relations     |
+|         115 | Alexander   | Khoo        | Sales                |
+|         124 | Kevin       | Mourgos     | Sales                |
+|         127 | James       | Landry      | Executive            |
+|         108 | Nancy       | Greenberg   | Finance              |
+|         130 | Mozhe       | Atkinson    | Accounting           |
+|         119 | Karen       | Colmenares  | Corporate Tax        |
+|         113 | Luis        | Popp        | Control And Credit   |
+|         112 | Jose Manuel | Urman       | Shareholder Services |
+|         111 | Ismael      | Sciarra     | Benefits             |
+|         109 | Daniel      | Faviet      | Payroll              |
+|         110 | John        | Chen        | Payroll              |
++-------------+-------------+-------------+----------------------+
+
+select o1.ordernumber,o1.status,
+sum(quantityordered*priceeach) total
+from orders o1
+inner join orderdetails o2
+on o1.ordernumber = o2.ordernumber
+group by o1.ordernumber
+limit 10;
++-------------+---------+----------+
+| ordernumber | status  | total    |
++-------------+---------+----------+
+|       10100 | Shipped | 10223.83 |
+|       10101 | Shipped | 10549.01 |
+|       10102 | Shipped |  5494.78 |
+|       10103 | Shipped | 50218.95 |
+|       10104 | Shipped | 40206.20 |
+|       10105 | Shipped | 53959.21 |
+|       10106 | Shipped | 52151.81 |
+|       10107 | Shipped | 22292.62 |
+|       10108 | Shipped | 51001.22 |
+|       10109 | Shipped | 25833.14 |
++-------------+---------+----------+
+
+select ordernumber,
+orderdate,
+productname,
+quantityordered,
+priceeach
+from orders
+inner join orderdetails using(ordernumber)
+inner join products using (productcode)
+order by ordernumber,orderlinenumber limit 10;
++-------------+------------+-------------------------------------------+-----------------+-----------+
+| ordernumber | orderdate  | productname                               | quantityordered | priceeach |
++-------------+------------+-------------------------------------------+-----------------+-----------+
+|       10100 | 2003-01-06 | 1936 Mercedes Benz 500k Roadster          |              49 |     35.29 |
+|       10100 | 2003-01-06 | 1911 Ford Town Car                        |              50 |     55.09 |
+|       10100 | 2003-01-06 | 1917 Grand Touring Sedan                  |              30 |    136.00 |
+|       10100 | 2003-01-06 | 1932 Alfa Romeo 8C2300 Spider Sport       |              22 |     75.46 |
+|       10101 | 2003-01-09 | 1928 Mercedes-Benz SSK                    |              26 |    167.06 |
+|       10101 | 2003-01-09 | 1938 Cadillac V-16 Presidential Limousine |              46 |     44.35 |
+|       10101 | 2003-01-09 | 1939 Chevrolet Deluxe Coupe               |              45 |     32.53 |
+|       10101 | 2003-01-09 | 1932 Model A Ford J-Coupe                 |              25 |    108.06 |
+|       10102 | 2003-01-10 | 1936 Mercedes-Benz 500K Special Roadster  |              41 |     43.13 |
+|       10102 | 2003-01-10 | 1937 Lincoln Berline                      |              39 |     95.55 |
++-------------+------------+-------------------------------------------+-----------------+-----------+
+
+
+
+select ordernumber,
+orderdate,
+productname,
+quantityordered,
+priceeach,
+customername
+from orders
+inner join orderdetails using(ordernumber)
+inner join products using (productcode)
+inner join customers using(customernumber)
+order by ordernumber,orderlinenumber limit 10;
++-------------+------------+-------------------------------------------+-----------------+-----------+------------------------------+
+| ordernumber | orderdate  | productname                               | quantityordered | priceeach | customername                 |
++-------------+------------+-------------------------------------------+-----------------+-----------+------------------------------+
+|       10100 | 2003-01-06 | 1936 Mercedes Benz 500k Roadster          |              49 |     35.29 | Online Diecast Creations Co. |
+|       10100 | 2003-01-06 | 1911 Ford Town Car                        |              50 |     55.09 | Online Diecast Creations Co. |
+|       10100 | 2003-01-06 | 1917 Grand Touring Sedan                  |              30 |    136.00 | Online Diecast Creations Co. |
+|       10100 | 2003-01-06 | 1932 Alfa Romeo 8C2300 Spider Sport       |              22 |     75.46 | Online Diecast Creations Co. |
+|       10101 | 2003-01-09 | 1928 Mercedes-Benz SSK                    |              26 |    167.06 | Blauer See Auto, Co.         |
+|       10101 | 2003-01-09 | 1938 Cadillac V-16 Presidential Limousine |              46 |     44.35 | Blauer See Auto, Co.         |
+|       10101 | 2003-01-09 | 1939 Chevrolet Deluxe Coupe               |              45 |     32.53 | Blauer See Auto, Co.         |
+|       10101 | 2003-01-09 | 1932 Model A Ford J-Coupe                 |              25 |    108.06 | Blauer See Auto, Co.         |
+|       10102 | 2003-01-10 | 1936 Mercedes-Benz 500K Special Roadster  |              41 |     43.13 | Vitachrome Inc.              |
+|       10102 | 2003-01-10 | 1937 Lincoln Berline                      |              39 |     95.55 | Vitachrome Inc.              |
++-------------+------------+-------------------------------------------+-----------------+-----------+------------------------------+
+
+select c.customernumber,customername,ordernumber,ordernumber,status from customers c 
+left join orders o
+on c.customernumber = o.customernumber
+where orderNumber is null
+order by orderNumber asc;
++----------------+--------------------------------+-------------+-------------+--------+
+| customernumber | customername                   | ordernumber | ordernumber | status |
++----------------+--------------------------------+-------------+-------------+--------+
+|            125 | Havel & Zbyszek Co             |        NULL |        NULL | NULL   |
+|            168 | American Souvenirs Inc         |        NULL |        NULL | NULL   |
+|            169 | Porto Imports Co.              |        NULL |        NULL | NULL   |
+|            206 | Asian Shopping Network, Co     |        NULL |        NULL | NULL   |
+|            223 | Nat├╝rlich Autos               |        NULL |        NULL | NULL   |
+|            237 | ANG Resellers                  |        NULL |        NULL | NULL   |
+|            247 | Messner Shopping Network       |        NULL |        NULL | NULL   |
+|            273 | Franken Gifts, Co              |        NULL |        NULL | NULL   |
+|            293 | BG&E Collectables              |        NULL |        NULL | NULL   |
+|            303 | Schuyler Imports               |        NULL |        NULL | NULL   |
+|            307 | Der Hund Imports               |        NULL |        NULL | NULL   |
+|            335 | Cramer Spezialit├ñten, Ltd     |        NULL |        NULL | NULL   |
+|            348 | Asian Treasures, Inc.          |        NULL |        NULL | NULL   |
+|            356 | SAR Distributors, Co           |        NULL |        NULL | NULL   |
+|            361 | Kommission Auto                |        NULL |        NULL | NULL   |
+|            369 | Lisboa Souveniers, Inc         |        NULL |        NULL | NULL   |
+|            376 | Precious Collectables          |        NULL |        NULL | NULL   |
+|            409 | Stuttgart Collectable Exchange |        NULL |        NULL | NULL   |
+|            443 | Feuer Online Stores, Inc       |        NULL |        NULL | NULL   |
+|            459 | Warburg Exchange               |        NULL |        NULL | NULL   |
+|            465 | Anton Designs, Ltd.            |        NULL |        NULL | NULL   |
+|            477 | Mit Vergn├╝gen & Co.           |        NULL |        NULL | NULL   |
+|            480 | Kremlin Collectables, Co.      |        NULL |        NULL | NULL   |
+|            481 | Raanan Stores, Inc             |        NULL |        NULL | NULL   |
++----------------+--------------------------------+-------------+-------------+--------+
+
+select employeenumber,customernumber
+from customers
+right join employees
+on salesrepEmployeenumber = employeenumber
+order by salesrepEmployeenumber desc;
++----------------+----------------+
+| employeenumber | customernumber |
++----------------+----------------+
+|           1702 |            216 |
+|           1702 |            298 |
+|           1702 |            344 |
+|           1702 |            376 |
+|           1702 |            458 |
+|           1702 |            484 |
+|           1621 |            148 |
+|           1621 |            177 |
+|           1621 |            211 |
+|           1621 |            385 |
+|           1621 |            398 |
+|           1612 |            166 |
+|           1612 |            323 |
+|           1612 |            357 |
+|           1612 |            412 |
+|           1612 |            496 |
+|           1611 |            114 |
+|           1611 |            276 |
+|           1611 |            282 |
+|           1611 |            333 |
+|           1611 |            471 |
+|           1504 |            121 |
+|           1504 |            128 |
+|           1504 |            144 |
+|           1504 |            167 |
+|           1504 |            189 |
+|           1504 |            259 |
+|           1504 |            299 |
+|           1504 |            415 |
+|           1504 |            448 |
+|           1501 |            186 |
+|           1501 |            187 |
+|           1501 |            201 |
+|           1501 |            240 |
+|           1501 |            311 |
+|           1501 |            324 |
+|           1501 |            334 |
+|           1501 |            489 |
+|           1401 |            145 |
+|           1401 |            227 |
+|           1401 |            249 |
+|           1401 |            278 |
+|           1401 |            314 |
+|           1401 |            381 |
+|           1401 |            382 |
+|           1401 |            386 |
+|           1401 |            452 |
+|           1401 |            473 |
+|           1370 |            103 |
+|           1370 |            119 |
+|           1370 |            141 |
+|           1370 |            171 |
+|           1370 |            209 |
+|           1370 |            242 |
+|           1370 |            256 |
+|           1337 |            146 |
+|           1337 |            172 |
+|           1337 |            250 |
+|           1337 |            350 |
+|           1337 |            353 |
+|           1337 |            406 |
+|           1323 |            131 |
+|           1323 |            175 |
+|           1323 |            202 |
+|           1323 |            260 |
+|           1323 |            319 |
+|           1323 |            328 |
+|           1323 |            447 |
+|           1323 |            486 |
+|           1286 |            151 |
+|           1286 |            168 |
+|           1286 |            181 |
+|           1286 |            233 |
+|           1286 |            424 |
+|           1286 |            455 |
+|           1286 |            456 |
+|           1216 |            157 |
+|           1216 |            198 |
+|           1216 |            286 |
+|           1216 |            362 |
+|           1216 |            363 |
+|           1216 |            462 |
+|           1188 |            173 |
+|           1188 |            204 |
+|           1188 |            320 |
+|           1188 |            339 |
+|           1188 |            379 |
+|           1188 |            495 |
+|           1166 |            112 |
+|           1166 |            205 |
+|           1166 |            219 |
+|           1166 |            239 |
+|           1166 |            347 |
+|           1166 |            475 |
+|           1165 |            124 |
+|           1165 |            129 |
+|           1165 |            161 |
+|           1165 |            321 |
+|           1165 |            450 |
+|           1165 |            487 |
+|           1002 |           NULL |
+|           1056 |           NULL |
+|           1076 |           NULL |
+|           1088 |           NULL |
+|           1102 |           NULL |
+|           1143 |           NULL |
+|           1619 |           NULL |
+|           1625 |           NULL |
++----------------+----------------+
+
+select concat(m.lastname," ", m.firstname) "Manager",
+concat(e.lastname," ",e.firstname) "Employee"
+from 
+employees e
+inner join 
+employees m on 
+m.employeenumber = e.reportsto
+order by Manager;
++-------------------+-------------------+
+| Manager           | Employee          |
++-------------------+-------------------+
+| Bondur Gerard     | Bondur Loui       |
+| Bondur Gerard     | Hernandez Gerard  |
+| Bondur Gerard     | Castillo Pamela   |
+| Bondur Gerard     | Bott Larry        |
+| Bondur Gerard     | Jones Barry       |
+| Bondur Gerard     | Gerard Martin     |
+| Bow Anthony       | Jennings Leslie   |
+| Bow Anthony       | Thompson Leslie   |
+| Bow Anthony       | Firrelli Julie    |
+| Bow Anthony       | Patterson Steve   |
+| Bow Anthony       | Tseng Foon Yue    |
+| Bow Anthony       | Vanauf George     |
+| Murphy Diane      | Patterson Mary    |
+| Murphy Diane      | Firrelli Jeff     |
+| Nishi Mami        | Kato Yoshimi      |
+| Patterson Mary    | Patterson William |
+| Patterson Mary    | Bondur Gerard     |
+| Patterson Mary    | Bow Anthony       |
+| Patterson Mary    | Nishi Mami        |
+| Patterson William | Fixter Andy       |
+| Patterson William | Marsh Peter       |
+| Patterson William | King Tom          |
++-------------------+-------------------+
+
+carteation join 
+select e.* , d.* from employee e , departments data
+---------------------------------------------------------------------------------------------------------------------
+
+assignment
+1. Write a query to select employees and their corresponding managers and their salaries
+
+select concat(e.first_name, " ",e.last_name) as Employee,
+e.salary as Employee_Salary,
+concat(m.first_name," ",m.last_name) as Manager,
+m.salary as Manager_Salary
+from employee e
+inner join employee m
+on e.manager_id = m.employee_id
+order by Manager limit 20;
+    -> order by Manager limit 20;
++-------------------+-----------------+------------------+----------------+
+| Employee          | Employee_Salary | Manager          | Manager_Salary |
++-------------------+-----------------+------------------+----------------+
+| Laura Bissot      |            3300 | Adam Fripp       |           8200 |
+| Mozhe Atkinson    |            2800 | Adam Fripp       |           8200 |
+| Bruce Ernst       |            6000 | Alexander Hunold |           9000 |
+| David Austin      |            4800 | Alexander Hunold |           9000 |
+| Valli Pataballa   |            4800 | Alexander Hunold |           9000 |
+| Diana Lorentz     |            4200 | Alexander Hunold |           9000 |
+| Alexander Khoo    |            3100 | Den Raphaely     |          11000 |
+| Shelli Baida      |            2900 | Den Raphaely     |          11000 |
+| Sigal Tobias      |            2800 | Den Raphaely     |          11000 |
+| Guy Himuro        |            2600 | Den Raphaely     |          11000 |
+| Karen Colmenares  |            2500 | Den Raphaely     |          11000 |
+| Alexander Hunold  |            9000 | Lex De Haan      |          17000 |
+| Julia Nayer       |            3200 | Matthew Weiss    |           8000 |
+| Irene Mikkilineni |            2700 | Matthew Weiss    |           8000 |
+| James Landry      |            2400 | Matthew Weiss    |           8000 |
+| Steven Markle     |            2200 | Matthew Weiss    |           8000 |
+| Daniel Faviet     |            9000 | Nancy Greenberg  |          12000 |
+| John Chen         |            8200 | Nancy Greenberg  |          12000 |
+| Ismael Sciarra    |            7700 | Nancy Greenberg  |          12000 |
+| Jose Manuel Urman |            7800 | Nancy Greenberg  |          12000 |
++-------------------+-----------------+------------------+----------------+
+
+2.Write a query to show count of employees under each manager in descending order
+
+select concat(m.first_name," ",m.last_name) as Manager,
+count(e.first_name) as total
+from employee e
+inner join employee m
+on e.manager_id = m.employee_id
+group by Manager limit 20;
++------------------+-------+
+| Manager          | total |
++------------------+-------+
+| Steven King      |     8 |
+| Lex De Haan      |     1 |
+| Alexander Hunold |     4 |
+| Neena Kochhar    |     1 |
+| Nancy Greenberg  |     5 |
+| Den Raphaely     |     5 |
+| Matthew Weiss    |     4 |
+| Adam Fripp       |     2 |
++------------------+-------+
+
+3.Find the count of employees in each department
+select department_name,
+count(e.department_id)
+from employee e
+inner join departments d
+on e.department_id = d.department_id
+group by department_name;
++----------------------+------------------------+
+| department_name      | count(e.department_id) |
++----------------------+------------------------+
+| Marketing            |                      2 |
+| Purchasing           |                      3 |
+| Human Resources      |                      3 |
+| Shipping             |                      7 |
+| IT                   |                      4 |
+| Public Relations     |                      1 |
+| Sales                |                      2 |
+| Executive            |                      1 |
+| Finance              |                      1 |
+| Accounting           |                      1 |
+| Corporate Tax        |                      1 |
+| Control And Credit   |                      1 |
+| Shareholder Services |                      1 |
+| Benefits             |                      1 |
+| Payroll              |                      2 |
++----------------------+------------------------+
+
+4. Write an SQL query to display employees who earn more than the average salary in that company
+select first_name,salary
+from employee e
+where salary >(
+select avg(salary)from employee);
++-------------+--------+
+| first_name  | salary |
++-------------+--------+
+| Steven      |  24100 |
+| Neena       |  17100 |
+| Lex         |  17100 |
+| Alexander   |   9100 |
+| Nancy       |  12100 |
+| Daniel      |   9100 |
+| John        |   8300 |
+| Ismael      |   7800 |
+| Jose Manuel |   7900 |
+| Den         |  11100 |
+| Matthew     |   8100 |
+| Adam        |   8300 |
+| Payam       |   8000 |
++-------------+--------+
+
+5. Find the maximum salary from each department.
+select fi
 
 
 
 
+subqueries
+
+select lastname,firstname from employees
+where officecode in (
+select officecode from offices
+where country='USA'); 
++-----------+-----------+
+| lastname  | firstname |
++-----------+-----------+
+| Murphy    | Diane     |
+| Patterson | Mary      |
+| Firrelli  | Jeff      |
+| Bow       | Anthony   |
+| Jennings  | Leslie    |
+| Thompson  | Leslie    |
+| Firrelli  | Julie     |
+| Patterson | Steve     |
+| Tseng     | Foon Yue  |
+| Vanauf    | George    |
++-----------+-----------+
+
+select customername from customers
+where customernumber not in (
+select distinct customernumber
+from orders);
+
+mysql> select max(items),
+    -> min(items),floor(avg(items))
+    -> from
+    -> (select orderNumber,count(orderNumber) as items
+    -> from orderdetails group by ordernumber) as lineitems
+    -> ;
++------------+------------+-------------------+
+| max(items) | min(items) | floor(avg(items)) |
++------------+------------+-------------------+
+|         18 |          1 |                 9 |
++------------+------------+-------------------+
+1 row in set (0.03 sec)
+
+select productname,buyprice,productline
+from products p1
+where buyprice > (
+select avg(buyprice) from products
+where productline = p1.productline)
+order by productline;
++-----------------------------------------+----------+------------------+
+| productname                             | buyprice | productline      |
++-----------------------------------------+----------+------------------+
+| 1952 Alpine Renault 1300                |    98.58 | Classic Cars     |
+| 1998 Chrysler Plymouth Prowler          |   101.51 | Classic Cars     |
+| 1992 Ferrari 360 Spider red             |    77.90 | Classic Cars     |
+| 1972 Alfa Romeo GTA                     |    85.68 | Classic Cars     |
+| 1962 LanciaA Delta 16V                  |   103.42 | Classic Cars     |
+| 1968 Ford Mustang                       |    95.34 | Classic Cars     |
+| 2001 Ferrari Enzo                       |    95.59 | Classic Cars     |
+| 1957 Corvette Convertible               |    69.93 | Classic Cars     |
+| 1970 Triumph Spitfire                   |    91.92 | Classic Cars     |
+| 1969 Corvair Monza                      |    89.14 | Classic Cars     |
+| 1968 Dodge Charger                      |    75.16 | Classic Cars     |
+| 1969 Ford Falcon                        |    83.05 | Classic Cars     |
+| 1976 Ford Gran Torino                   |    73.49 | Classic Cars     |
+| 1993 Mazda RX-7                         |    83.51 | Classic Cars     |
+| 1952 Citroen-15CV                       |    72.82 | Classic Cars     |
+| 1965 Aston Martin DB5                   |    65.96 | Classic Cars     |
+| 1956 Porsche 356A Coupe                 |    98.30 | Classic Cars     |
+| 1992 Porsche Cayenne Turbo Silver       |    69.78 | Classic Cars     |
+| 1995 Honda Civic                        |    93.89 | Classic Cars     |
+| 1996 Moto Guzzi 1100i                   |    68.99 | Motorcycles      |
+| 2003 Harley-Davidson Eagle Drag Bike    |    91.02 | Motorcycles      |
+| 2002 Suzuki XREO                        |    66.27 | Motorcycles      |
+| 1997 BMW R 1100 S                       |    60.86 | Motorcycles      |
+| 1997 BMW F650 ST                        |    66.92 | Motorcycles      |
+| 1974 Ducati 350 Mk3 Desmo               |    56.13 | Motorcycles      |
+| 1928 British Royal Navy Airplane        |    66.74 | Planes           |
+| 1980s Black Hawk Helicopter             |    77.27 | Planes           |
+| American Airlines: B767-300             |    51.15 | Planes           |
+| America West Airlines B757-200          |    68.80 | Planes           |
+| ATA: B757-300                           |    59.33 | Planes           |
+| F/A 18 Hornet 1/72                      |    54.40 | Planes           |
+| 1999 Yamaha Speed Boat                  |    51.61 | Ships            |
+| The Queen Mary                          |    53.63 | Ships            |
+| 18th century schooner                   |    82.34 | Ships            |
+| The Titanic                             |    51.09 | Ships            |
+| Collectable Wooden Train                |    67.56 | Trains           |
+| 1962 Volkswagen Microbus                |    61.34 | Trucks and Buses |
+| 1940 Ford Pickup Truck                  |    58.33 | Trucks and Buses |
+| 1964 Mercedes Tour Bus                  |    74.86 | Trucks and Buses |
+| Diamond T620 Semi-Skirted Tanker        |    68.29 | Trucks and Buses |
+| 1940s Ford truck                        |    84.76 | Trucks and Buses |
+| 1958 Setra Bus                          |    77.90 | Trucks and Buses |
+| 1913 Ford Model T Speedster             |    60.78 | Vintage Cars     |
+| 1904 Buick Runabout                     |    52.66 | Vintage Cars     |
+| 1903 Ford Model A                       |    68.30 | Vintage Cars     |
+| 1936 Chrysler Airflow                   |    57.46 | Vintage Cars     |
+| 1928 Mercedes-Benz SSK                  |    72.56 | Vintage Cars     |
+| 1917 Grand Touring Sedan                |    86.70 | Vintage Cars     |
+| 1932 Model A Ford J-Coupe               |    58.48 | Vintage Cars     |
+| 1937 Lincoln Berline                    |    60.62 | Vintage Cars     |
+| 1917 Maxwell Touring Car                |    57.54 | Vintage Cars     |
+| 18th Century Vintage Horse Carriage     |    60.74 | Vintage Cars     |
+| 1941 Chevrolet Special Deluxe Cabriolet |    64.58 | Vintage Cars     |
+| 1912 Ford Model T Delivery Wagon        |    46.91 | Vintage Cars     |
+| 1940 Ford Delivery Sedan                |    48.64 | Vintage Cars     |
++-----------------------------------------+----------+------------------+
+55 rows in set (0.04 sec)
+
+select customername,customernumber from customers
+where exists
+(
+select ordernumber,sum(priceeach*quantityordered) total
+from orderdetails
+inner join orders using (orderNumber)
+where customernumber = customers.customernumber
+group by orderNumber
+having sum(priceeach*quantityordered) > 60000)
++--------------------------+----------------+
+| customername             | customernumber |
++--------------------------+----------------+
+| Dragon Souveniers, Ltd.  |            148 |
+| Toms Spezialit├ñten, Ltd |            259 |
+| Vida Sport, Ltd          |            298 |
++--------------------------+----------------+
+
+select customernumber,
+round(sum(quantityordered*priceeach)) sales,
+(case
+when sum(quantityordered*priceeach) < 10000 then
+'silver'
+when sum(quantityordered*priceeach) between 10000 and 100000 then 'Gold'
+when sum(quantityordered*priceeach) >100000 then 'Platinum'
+end) Customergroup
+from 
+orderdetails inner join orders using (orderNumber)
+where year(shippeddate) = 2003
+group by customernumber
+limit 20;
++----------------+--------+---------------+
+| customernumber | sales  | Customergroup |
++----------------+--------+---------------+
+|            103 |  14571 | Gold          |
+|            112 |  32642 | Gold          |
+|            114 |  53429 | Gold          |
+|            121 |  51710 | Gold          |
+|            124 | 167783 | Platinum      |
+|            128 |  34651 | Gold          |
+|            129 |  40462 | Gold          |
+|            131 |  22293 | Gold          |
+|            141 | 189840 | Platinum      |
+|            144 |   7675 | silver        |
+|            145 |  53959 | Gold          |
+|            146 |  39712 | Gold          |
+|            148 | 150123 | Platinum      |
+|            151 | 117635 | Platinum      |
+|            161 |  89419 | Gold          |
+|            167 |  85024 | Gold          |
+|            171 |  42784 | Gold          |
+|            172 |  33383 | Gold          |
+|            175 |  24879 | Gold          |
+|            181 |   5495 | silver        |
++----------------+--------+---------------+
+
+update employee
+set commission_pct = 25
+where department_id in (
+select department_id from departments where
+department_name = 'IT'
+);
+
+delete from tasks
+where start_date is null
+and due_date is null
+and priority =2;
+
+delete from tasks
+
+rollback
+
+truncate table tasks
+select upper(first_name),lower(first_name) from employee
+select replace(job_id,'IT_PROG','IT_PROGRAMMER') from employee
++-------------------------------------------+
+| replace(job_id,'IT_PROG','IT_PROGRAMMER') |
++-------------------------------------------+
+| AD_PRES                                   |
+| AD_VP                                     |
+| AD_VP                                     |
+| IT_PROGRAMMER                             |
+| IT_PROGRAMMER                             |
+| IT_PROGRAMMER                             |
+| IT_PROGRAMMER                             |
+| IT_PROGRAMMER                             |
+| FI_MGR                                    |
+| FI_ACCOUNT                                |
+| FI_ACCOUNT                                |
+| FI_ACCOUNT                                |
+| FI_ACCOUNT                                |
+| FI_ACCOUNT                                |
+| PU_MAN                                    |
+| PU_CLERK                                  |
+| PU_CLERK                                  |
+| PU_CLERK                                  |
+| PU_CLERK                                  |
+| PU_CLERK                                  |
+| ST_MAN                                    |
+| ST_MAN                                    |
+| ST_MAN                                    |
+| ST_MAN                                    |
+| ST_MAN                                    |
+| ST_CLERK                                  |
+| ST_CLERK                                  |
+| ST_CLERK                                  |
+| ST_CLERK                                  |
+| ST_CLERK                                  |
+| ST_CLERK                                  |
++-------------------------------------------+
+select left(job_id,2) from employee
++----------------+
+| left(job_id,2) |
++----------------+
+| AD             |
+| AD             |
+| AD             |
+| IT             |
+| IT             |
+| IT             |
+| IT             |
+| IT             |
+| FI             |
+| FI             |
+| FI             |
+| FI             |
+| FI             |
+| FI             |
+| PU             |
+| PU             |
+| PU             |
+| PU             |
+| PU             |
+| PU             |
+| ST             |
+| ST             |
+| ST             |
+| ST             |
+| ST             |
+| ST             |
+| ST             |
+| ST             |
+| ST             |
+| ST             |
+| ST             |
++----------------+
+select right(job_id,2) from employee
++-----------------+
+| right(job_id,2) |
++-----------------+
+| ES              |
+| VP              |
+| VP              |
+| OG              |
+| OG              |
+| OG              |
+| OG              |
+| OG              |
+| GR              |
+| NT              |
+| NT              |
+| NT              |
+| NT              |
+| NT              |
+| AN              |
+| RK              |
+| RK              |
+| RK              |
+| RK              |
+| RK              |
+| AN              |
+| AN              |
+| AN              |
+| AN              |
+| AN              |
+| RK              |
+| RK              |
+| RK              |
+| RK              |
+| RK              |
+| RK              |
++-----------------+
+select first_name,length(first_name) from employee
++-------------+--------------------+
+| first_name  | length(first_name) |
++-------------+--------------------+
+| Steven      |                  6 |
+| Neena       |                  5 |
+| Lex         |                  3 |
+| Alexander   |                  9 |
+| Bruce       |                  5 |
+| David       |                  5 |
+| Valli       |                  5 |
+| Diana       |                  5 |
+| Nancy       |                  5 |
+| Daniel      |                  6 |
+| John        |                  4 |
+| Ismael      |                  6 |
+| Jose Manuel |                 11 |
+| Luis        |                  4 |
+| Den         |                  3 |
+| Alexander   |                  9 |
+| Shelli      |                  6 |
+| Sigal       |                  5 |
+| Guy         |                  3 |
+| Karen       |                  5 |
+| Matthew     |                  7 |
+| Adam        |                  4 |
+| Payam       |                  5 |
+| Shanta      |                  6 |
+| Kevin       |                  5 |
+| Julia       |                  5 |
+| Irene       |                  5 |
+| James       |                  5 |
+| Steven      |                  6 |
+| Laura       |                  5 |
+| Mozhe       |                  5 |
++-------------+--------------------+
+select reverse(first_name) from employee
++---------------------+
+| reverse(first_name) |
++---------------------+
+| nevetS              |
+| aneeN               |
+| xeL                 |
+| rednaxelA           |
+| ecurB               |
+| divaD               |
+| illaV               |
+| anaiD               |
+| ycnaN               |
+| leinaD              |
+| nhoJ                |
+| leamsI              |
+| leunaM esoJ         |
+| siuL                |
+| neD                 |
+| rednaxelA           |
+| illehS              |
+| lagiS               |
+| yuG                 |
+| neraK               |
+| wehttaM             |
+| madA                |
+| mayaP               |
+| atnahS              |
+| niveK               |
+| ailuJ               |
+| enerI               |
+| semaJ               |
+| nevetS              |
+| aruaL               |
+| ehzoM               |
++---------------------+
+
+select productname,substr(productname,3,2) from products limit 6;
++---------------------------------------+-------------------------+
+| productname                           | substr(productname,3,2) |
++---------------------------------------+-------------------------+
+| 1969 Harley Davidson Ultimate Chopper | 69                      |
+| 1952 Alpine Renault 1300              | 52                      |
+| 1996 Moto Guzzi 1100i                 | 96                      |
+| 2003 Harley-Davidson Eagle Drag Bike  | 03                      |
+| 1972 Alfa Romeo GTA                   | 72                      |
+| 1962 LanciaA Delta 16V                | 62                      |
++---------------------------------------+-------------------------+
 
 
+select productname,substr(productname,-3,2) from products limit 6;
++---------------------------------------+--------------------------+
+| productname                           | substr(productname,-3,2) |
++---------------------------------------+--------------------------+
+| 1969 Harley Davidson Ultimate Chopper | pe                       |
+| 1952 Alpine Renault 1300              | 30                       |
+| 1996 Moto Guzzi 1100i                 | 00                       |
+| 2003 Harley-Davidson Eagle Drag Bike  | ik                       |
+| 1972 Alfa Romeo GTA                   | GT                       |
+| 1962 LanciaA Delta 16V                | 16                       |
++---------------------------------------+--------------------------+
+
+select instr(productname,'Davidson') from products limit 5;
++-------------------------------+
+| instr(productname,'Davidson') |
++-------------------------------+
+|                            13 |
+|                             0 |
+|                             0 |
+|                            13 |
+|                             0 |
++-------------------------------+

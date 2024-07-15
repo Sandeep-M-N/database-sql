@@ -1,0 +1,16 @@
+// To create store procedure
+
+Delimiter $$
+create procedure getCustomers()
+begin
+select customerName as cname,concat(city,'',state,'',postalcode,'',country) address
+from customers
+order by customerName;
+end$$
+delimiter ;
+
+// to drop procedures 
+
+drop procedure getCustomers;
+ // to see the output
+  call getCustomers();
